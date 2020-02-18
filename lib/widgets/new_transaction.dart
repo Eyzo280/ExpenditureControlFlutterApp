@@ -11,6 +11,17 @@ class NewTransaction extends StatelessWidget {
   final titleController = TextEditingController();
   final amountController = TextEditingController();
 
+  void submitData() {
+    final enteredTitle = titleController.text;
+    final enteredAmount = double.parse(amountController.text);
+    
+    if (enteredTitle.isEmpty || enteredAmount <= 0) {
+      return;
+    }
+
+    _addNewTransaction(enteredTitle, enteredAmount);
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -24,17 +35,17 @@ class NewTransaction extends StatelessWidget {
             //  titleInput = val;
             // },
             controller: titleController,
+            onSubmitted: (_) => submitData(), // dzieki onSubmitted: gdy uzytkownik kliknie w przycisk Gotowe na klawiaturze dane zostana dodane, gdy spalniaja warunki funkcji itp.
           ),
           TextField(
             decoration: InputDecoration(labelText: 'Amount'),
             // onChanged: (val) => amountInput = val,
             controller: amountController,
+            keyboardType: TextInputType.number, // gdy uzytkownik kliknie w pole tekstowe pokaze mu sie klawiatura numeryczna
+            onSubmitted: (_) => submitData(), // (_) taka funkcje anonimowa mozemy dodac, kiedy chcemy wykonac funkcje anonimowa, lecz nie interesuja nas dane ktore dostajemy wczesniej
           ),
           FlatButton(
-            onPressed: (() {
-              _addNewTransaction(titleController.text, double.parse(amountController.text));
-              print('Add new Transaction');
-            }),
+            onPressed: submitData,
             child: Text('Transaction'),
             color: Colors.purple,
           )

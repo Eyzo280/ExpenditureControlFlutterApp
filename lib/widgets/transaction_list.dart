@@ -11,8 +11,9 @@ class TransactionList extends StatelessWidget {
     return Container(
       //  musimy dodac Container oraz ustawic jego wysokosc, aby moc dodac SingleChildScrollView/ListView, gdyz bez tego SingleChildScrollView/ListView nie wie na jakiej wysokosci moze przewijac widget
       height: 300, //
-      child: ListView(
-        children: _userTransactions.map((tx) {
+      child: ListView.builder(
+        itemCount: _userTransactions.length,
+        itemBuilder: (ctx, index) {
           return Card(
             child: Row(
               children: <Widget>[
@@ -29,7 +30,7 @@ class TransactionList extends StatelessWidget {
                   ),
                   padding: EdgeInsets.all(10),
                   child: Text(
-                    '\$${tx.amount}',
+                    '\$${_userTransactions[index].amount.toStringAsFixed(2)}', // dzieki .toStringAsFixed(2) dane wyjsciowe na ekranie sa zawsze z dwoma miejscami po przecinku
                     style: TextStyle(
                       color: Colors.purple,
                       fontWeight: FontWeight.bold,
@@ -41,13 +42,13 @@ class TransactionList extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      tx.title,
+                      _userTransactions[index].title,
                       style: TextStyle(
                         fontSize: 16,
                       ),
                     ),
                     Text(
-                      DateFormat('yyyy-MM-dd').format(tx.date),
+                      DateFormat('yyyy-MM-dd').format(_userTransactions[index].date),
                       style: TextStyle(
                         fontSize: 10,
                         color: Colors.grey,
@@ -58,7 +59,7 @@ class TransactionList extends StatelessWidget {
               ],
             ),
           );
-        }).toList(),
+        },
       ),
     );
   }
