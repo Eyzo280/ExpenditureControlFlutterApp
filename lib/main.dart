@@ -1,5 +1,3 @@
-import 'package:expenditure_control_flutterapp/widgets/user_transaction.dart';
-
 import './widgets/new_transaction.dart';
 
 import './widgets/transaction_list.dart';
@@ -14,17 +12,68 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter App',
+      theme: ThemeData(
+        primaryColor: Colors.purple,
+        accentColor: Colors.amber,
+      ),
       home: MyHomePage(),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  final List<Transaction> _userTransactions = [
+    Transaction(
+      id: 't1',
+      title: 'Buty',
+      amount: 60.99,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: 't2',
+      title: 'Bluza',
+      amount: 30.99,
+      date: DateTime.now(),
+    )
+  ];
+
+  void _addNewTransaction(String txTitle, double txAmount) {
+    final newTx = Transaction(
+      id: DateTime.now().toString(),
+      title: txTitle,
+      amount: txAmount,
+      date: DateTime.now(),
+    );
+
+    setState(() {
+      _userTransactions.add(newTx);
+    });
+  }
+
+  void startNewTransaction(BuildContext ctx) {
+    showModalBottomSheet( // umożliwia to zrobienie okna ktore jest nadrzedne nad innymi widgetami
+        context: ctx,
+        builder: (_) {
+          return NewTransaction(_addNewTransaction);
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Flutter App'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () => startNewTransaction(context),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -39,9 +88,15 @@ class MyHomePage extends StatelessWidget {
                 elevation: 5, // Wielkosc cienia
               ),
             ),
-            UserTransactions()
+            TransactionList(_userTransactions),
           ],
         ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat, // wysrodkowanie przycisku plywajacego
+      floatingActionButton: FloatingActionButton( // przycisk plywajacy
+        child: Icon(Icons.add),
+        backgroundColor: Theme.of(context).accentColor, // Theme.of(context).accentColor oznacza ze pobiera alternatywny kolor z Theme
+        onPressed: () => startNewTransaction(context),
       ),
     );
   }

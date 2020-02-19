@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 
-class NewTransaction extends StatelessWidget {
+class NewTransaction extends StatefulWidget {
   final Function _addNewTransaction;
 
   NewTransaction(this._addNewTransaction);
-  
-  // String titleInput;
-  // String amountInput;
 
+  @override
+  _NewTransactionState createState() => _NewTransactionState();
+}
+
+class _NewTransactionState extends State<NewTransaction> {
   final titleController = TextEditingController();
+
   final amountController = TextEditingController();
 
   void submitData() {
@@ -19,9 +22,10 @@ class NewTransaction extends StatelessWidget {
       return;
     }
 
-    _addNewTransaction(enteredTitle, enteredAmount);
-  }
+    widget._addNewTransaction(enteredTitle, enteredAmount);
 
+    Navigator.of(context).pop(); // daje nam to możliwość zamknięcia okna nadrzędnego
+  }
 
   @override
   Widget build(BuildContext context) {
