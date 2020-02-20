@@ -15,6 +15,23 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Colors.purple,
         accentColor: Colors.amber,
+        fontFamily: 'Quicksand', // globalna czcionka
+        textTheme: ThemeData.light().textTheme.copyWith(
+              title: TextStyle(
+                fontFamily: 'OpenSans',
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
+        appBarTheme: AppBarTheme(
+          // zmienia TextStyle tytulu w appBar
+          textTheme: TextTheme(
+            title: TextStyle(
+              fontFamily: 'OpenSans',
+              fontSize: 15,
+            ),
+          ),
+        ),
       ),
       home: MyHomePage(),
     );
@@ -27,20 +44,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<Transaction> _userTransactions = [
-    Transaction(
-      id: 't1',
-      title: 'Buty',
-      amount: 60.99,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 't2',
-      title: 'Bluza',
-      amount: 30.99,
-      date: DateTime.now(),
-    )
-  ];
+  final List<Transaction> _userTransactions = [];
 
   void _addNewTransaction(String txTitle, double txAmount) {
     final newTx = Transaction(
@@ -56,7 +60,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void startNewTransaction(BuildContext ctx) {
-    showModalBottomSheet( // umożliwia to zrobienie okna ktore jest nadrzedne nad innymi widgetami
+    showModalBottomSheet(
+        // umożliwia to zrobienie okna ktore jest nadrzedne nad innymi widgetami
         context: ctx,
         builder: (_) {
           return NewTransaction(_addNewTransaction);
@@ -92,10 +97,13 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat, // wysrodkowanie przycisku plywajacego
-      floatingActionButton: FloatingActionButton( // przycisk plywajacy
+      floatingActionButtonLocation: FloatingActionButtonLocation
+          .centerFloat, // wysrodkowanie przycisku plywajacego
+      floatingActionButton: FloatingActionButton(
+        // przycisk plywajacy
         child: Icon(Icons.add),
-        backgroundColor: Theme.of(context).accentColor, // Theme.of(context).accentColor oznacza ze pobiera alternatywny kolor z Theme
+        backgroundColor: Theme.of(context)
+            .accentColor, // Theme.of(context).accentColor oznacza ze pobiera alternatywny kolor z Theme
         onPressed: () => startNewTransaction(context),
       ),
     );
