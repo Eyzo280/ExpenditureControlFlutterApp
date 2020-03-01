@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
               ),
+              button: TextStyle(color: Colors.white),
             ),
         appBarTheme: AppBarTheme(
           // zmienia TextStyle tytulu w appBar
@@ -48,12 +49,13 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _userTransactions = [];
 
-  void _addNewTransaction(String txTitle, double txAmount) {
+  void _addNewTransaction(
+      String txTitle, double txAmount, DateTime chosendate) {
     final newTx = Transaction(
       id: DateTime.now().toString(),
       title: txTitle,
       amount: txAmount,
-      date: DateTime.now(),
+      date: chosendate,
     );
 
     setState(() {
@@ -71,9 +73,20 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   List<Transaction> get _recentTransactions {
-    return _userTransactions.where((tx) { // jezeli uzujemy where to gdy nastepny return zwroci true to element zostanie dodany do listy
-      return tx.date.isAfter(DateTime.now().subtract(Duration(days: 7))); // tak jest dobrze ale mozna zrobic w ten sposob > tx.date.isAfter(DateTime.now().substract(Duration(days: 7))) dzieki temu zapisowi dostajemy cala date krotsza o 7 dni
+    return _userTransactions.where((tx) {
+      // jezeli uzujemy where to gdy nastepny return zwroci true to element zostanie dodany do listy
+      return tx.date.isAfter(DateTime.now().subtract(Duration(
+          days:
+              7))); // tak jest dobrze ale mozna zrobic w ten sposob > tx.date.isAfter(DateTime.now().substract(Duration(days: 7))) dzieki temu zapisowi dostajemy cala date krotsza o 7 dni
     }).toList(); // bez .toList() jest blad Iterable
+  }
+
+  void _deleteTransaction(String id) {
+    setState(() {
+      _userTransactions.removeWhere((tx) {
+        return tx.id == id;
+      });
+    });
   }
 
   @override
@@ -94,7 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Chart(_recentTransactions),
-            TransactionList(_userTransactions),
+            TransactionList(_userTransactions, _deleteTransaction),
           ],
         ),
       ),
